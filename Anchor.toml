@@ -1,0 +1,24 @@
+[toolchain]
+
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+nft_mint_vault = "Bw6PFnEiT7tmLP4jD745ztATTbUzoPeknRz715cvgaGj"
+
+[programs.devnet]
+nft_mint_vault = "Bw6PFnEiT7tmLP4jD745ztATTbUzoPeknRz715cvgaGj"
+
+[registry]
+url = "https://api.devnet.solana.com"
+
+[provider]
+cluster = "Devnet"
+wallet = "~/my-keypair.json"
+
+[test]
+startup_wait = 20000
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
