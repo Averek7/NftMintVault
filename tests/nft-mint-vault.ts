@@ -40,7 +40,11 @@ describe("mint-nft", async () => {
   const vault = anchor.web3.Keypair.generate();
   console.log(`vault: ${vault.publicKey.toBase58()}`);
 
-  const ata = await getAssociatedTokenAddress(mint.publicKey, signer.publicKey);
+  const ata = await spl.getAssociatedTokenAddress(
+    mint.publicKey,
+    signer.publicKey
+  );
+
   const vaultTokenAccount = await spl.getAssociatedTokenAddress(
     mint.publicKey,
     vault.publicKey
@@ -89,8 +93,6 @@ describe("mint-nft", async () => {
   });
 
   it("creates vault!", async () => {
-    const vault = anchor.web3.Keypair.generate();
-
     const tx = await program.methods
       .createVault(mint.publicKey)
       .accounts({
@@ -106,28 +108,13 @@ describe("mint-nft", async () => {
     );
   });
 
-  it("locks nft in vault!", async () => {    
-    await program.methods
-      .createVault(mint.publicKey)
-      .accounts({
-        vault: vault.publicKey,
-        owner: provider.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .signers([vault])
-      .rpc();
-
-    const nftTokenAccount = await spl.getAssociatedTokenAddress(
-      mint.publicKey,
-      signer.publicKey
-    );
-
+  it("locks nft in vault!", async () => {
     const tx = await program.methods
       .lockNft()
       .accounts({
         vault: vault.publicKey,
         owner: provider.publicKey,
-        nftTokenAccount: nftTokenAccount,
+        nftTokenAccount: ata,
         vaultTokenAccount: vaultTokenAccount,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
@@ -141,18 +128,6 @@ describe("mint-nft", async () => {
 
   it("executes swap!", async () => {
     const swap = anchor.web3.Keypair.generate();
-    const price = 100000000; // Price in lamports (1 SOL)
-
-    // Create the swap first
-    await program.methods
-      .createSwap(mint.publicKey, new anchor.BN(price))
-      .accounts({
-        swap: swap.publicKey,
-        seller: provider.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .signers([swap])
-      .rpc();
 
     const buyerTokenAccount = await getAssociatedTokenAddress(
       mint.publicKey,

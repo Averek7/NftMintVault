@@ -5,16 +5,16 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-nft_mint_vault = "Bw6PFnEiT7tmLP4jD745ztATTbUzoPeknRz715cvgaGj"
+nft_mint_vault = "CXGL4hPhcChVXwZX3cz6F8E6wfjqbEWWTkKzAdoc9ZFn"
 
 [programs.devnet]
-nft_mint_vault = "Bw6PFnEiT7tmLP4jD745ztATTbUzoPeknRz715cvgaGj"
+nft_mint_vault = "CXGL4hPhcChVXwZX3cz6F8E6wfjqbEWWTkKzAdoc9ZFn"
 
 [registry]
 url = "https://api.devnet.solana.com"
 
 [provider]
-cluster = "Devnet"
+cluster = "devnet"
 wallet = "~/my-keypair.json"
 
 [test]

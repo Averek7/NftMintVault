@@ -1,11 +1,7 @@
 use anchor_lang::prelude::*;
-
 use anchor_spl::{
     associated_token::AssociatedToken,
-    metadata::{
-        create_master_edition_v3, create_metadata_accounts_v3, CreateMasterEditionV3,
-        CreateMetadataAccountsV3, Metadata,
-    },
+    metadata::{create_master_edition_v3, create_metadata_accounts_v3, CreateMasterEditionV3, CreateMetadataAccountsV3, Metadata},
     token::{mint_to, Mint, MintTo, Token, TokenAccount},
 };
 use mpl_token_metadata::{
@@ -13,7 +9,7 @@ use mpl_token_metadata::{
     types::DataV2,
 };
 
-declare_id!("Bw6PFnEiT7tmLP4jD745ztATTbUzoPeknRz715cvgaGj");
+declare_id!("CXGL4hPhcChVXwZX3cz6F8E6wfjqbEWWTkKzAdoc9ZFn");
 
 #[program]
 pub mod nft_mint_vault {
@@ -32,7 +28,7 @@ pub mod nft_mint_vault {
             ctx.accounts.token_program.to_account_info(),
             MintTo {
                 mint: ctx.accounts.mint.to_account_info(),
-                to: ctx.accounts.ata.to_account_info(), //linked the mint account to the associated token account
+                to: ctx.accounts.ata.to_account_info(),
                 authority: ctx.accounts.signer.to_account_info(),
             },
         );
@@ -96,7 +92,6 @@ pub mod nft_mint_vault {
 
     pub fn lock_nft(ctx: Context<LockNft>) -> Result<()> {
         let vault = &mut ctx.accounts.vault;
-        // let _nft = &ctx.accounts.nft;
 
         require!(
             vault.owner == *ctx.accounts.owner.key,
@@ -175,15 +170,13 @@ pub struct InitNFT<'info> {
         payer = signer,
         associated_token::mint = mint,
         associated_token::authority = signer
-        )]
+    )]
     pub ata: Account<'info, TokenAccount>,
     /// CHECK: we are about to create this with metaplex
-    #[account(mut,
-    address= MetadataAccount::find_pda(&mint.key()).0,)]
+    #[account(mut, address = MetadataAccount::find_pda(&mint.key()).0)]
     pub metadata_account: AccountInfo<'info>,
     /// CHECK: we are about to create this with metaplex
-    #[account(mut,
-    address= MasterEdition::find_pda(&mint.key()).0,)]
+    #[account(mut, address = MasterEdition::find_pda(&mint.key()).0)]
     pub master_edition_account: AccountInfo<'info>,
 
     pub token_program: Program<'info, Token>,
@@ -206,8 +199,6 @@ pub struct CreateVault<'info> {
 pub struct LockNft<'info> {
     #[account(mut)]
     pub vault: Account<'info, Vault>,
-    // #[account(mut)]
-    // pub nft: Account<'info, Nft>,
     #[account(mut)]
     pub owner: Signer<'info>,
     #[account(mut)]
@@ -254,12 +245,6 @@ pub struct Vault {
     pub owner: Pubkey,
     pub nft_mint: Pubkey,
     pub is_locked: bool,
-}
-
-#[account]
-pub struct Nft {
-    pub owner: Pubkey,
-    pub mint: Pubkey,
 }
 
 #[error_code]
